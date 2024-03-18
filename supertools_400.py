@@ -571,7 +571,28 @@ class OBJECT_OT_my_operator_propsizeauto(bpy.types.Operator):
         print(obj.dimensions[1])
         return{'FINISHED'}  
 
-##############################################################3333
+class OBJECT_OT_my_operator_units(bpy.types.Operator): #UNITS HERE
+    bl_idname = "object.my_operator_units"
+    bl_label = "Super Extrude"
+    bl_options = {'REGISTER', 'UNDO'}
+    bl_region_type = "TOOLS"
+       
+    def execute(self,context):
+        print('Units')
+        scene = context.scene
+
+        skipnext = False
+
+        if context.scene.unit_settings.length_unit != 'MILLIMETERS':
+            context.scene.unit_settings.length_unit = "MILLIMETERS"
+            skipnext = True
+
+        if context.scene.unit_settings.length_unit == 'MILLIMETERS' and skipnext == False:
+            context.scene.unit_settings.length_unit = "METERS"
+
+        return{'FINISHED'}  
+
+##############################################################
 class CURVE_PT_SuperToolsPanel(Panel):
     bl_label = "Super Panel"
     bl_idname = "CURVE_PT_SuperToolsPanel"
@@ -579,7 +600,7 @@ class CURVE_PT_SuperToolsPanel(Panel):
     bl_region_type = "UI"
     bl_category = "Super Tools"
     #bl_context = "objectmode"
-    bl_options = {"DEFAULT_CLOSED"}
+    bl_options = {"HEADER_LAYOUT_EXPAND"}
 
 
 
@@ -671,7 +692,7 @@ class CURVE_PT_SuperToolsPanel(Panel):
         row6 = layout.row()
         propstring_formatted = '%.2f' % propfloat
         propstring_clean = str(propstring_formatted)        
-        propinfo = "Current Prop Size: " + propstring_clean
+        propinfo = "Prop Size: " + propstring_clean
         row6.label(text=propinfo)
         row6.operator("OBJECT_OT_my_operator_propsizeauto",text="Auto Prop",icon="PROP_CON")
 
@@ -693,21 +714,28 @@ class CURVE_PT_SuperToolsPanel(Panel):
   
 
 
-
-        
-
         scene = context.scene
         #superProps = context.window_manager.super_tools_props
         propfloat = scene.tool_settings.proportional_size
         print('propfloat')
         print(propfloat)
 
-        
+        print('units:')
+        #context.scene.unit_settings.length_unit = 'CENTIMETERS' 
+        print(context.scene.unit_settings.length_unit)
+        units =  "Units: " +  str(context.scene.unit_settings.length_unit)
+        colu = layout.column(align=True) 
+        colu.label(text=units) 
+        rowu=layout.row() 
+        skipnextbutton = True
+        if context.scene.unit_settings.length_unit != 'MILLIMETERS':
+            rowu.operator("OBJECT_OT_my_operator_units",text="Change to MM",icon="NOCURVE")
+            skipnextbutton = False
+        if context.scene.unit_settings.length_unit == 'MILLIMETERS' and skipnextbutton == True:
+            rowu.operator("OBJECT_OT_my_operator_units",text="Change to Meters",icon="NOCURVE")
+         
 
 
-    
-
-        
         
 
 #        col = layout.column(align=True)
@@ -844,7 +872,8 @@ classes = (
     OBJECT_OT_my_operator_rz,
     OBJECT_OT_my_operator_rx45,
     OBJECT_OT_my_operator_ry45,
-    OBJECT_OT_my_operator_rz45
+    OBJECT_OT_my_operator_rz45,
+    OBJECT_OT_my_operator_units
 )
 
 
