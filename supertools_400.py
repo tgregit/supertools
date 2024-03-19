@@ -82,6 +82,7 @@ def extrude(myx, myy, myz):
 def updatepropsize(self,context):
     print('updating...')
     scene = context.scene
+
     scene.tool_settings.proportional_size=scene.key_floatpropsize
     print(scene.tool_settings.proportional_size)
 
@@ -182,7 +183,7 @@ def scaleMesh(self,context):
     except:
         superProps.key_floatys  = 1.0
     try:
-        zs = scene.key_floatzs
+        zs = superProps.key_floatzs
     except:
         superProps.key_floatzs  = 1.0
     
